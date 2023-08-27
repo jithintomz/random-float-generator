@@ -1,0 +1,17 @@
+# WARNING: this file is not suitable for production, please use with caution
+version: '3'
+
+services:
+  web:
+    image: core
+    build: .
+    command: bash -c "flask db upgrade && flask init && gunicorn -b 0.0.0.0:5000 core.wsgi:app"
+    env_file:
+      - ./.flaskenv
+    environment:
+      - DATABASE_URI=sqlite:////db/core.db
+    volumes:
+      - ./core:/code/core
+      - ./db/:/db/
+    ports:
+      - "5000:5000"
